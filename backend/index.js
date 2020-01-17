@@ -18,16 +18,20 @@ routes.get('/', oneTurn);
 const state = {
     Players: {},
     Deck : {
-        size: 40,
-        Cards: [ {naipe:"heart", type: "A"}, {naipe:"heart", type:"2"}, {naipe:"heart", type:"3"}, {naipe:"heart", type:"4"}, {naipe:"heart", type:"5"}, {naipe:"heart", type: "6"}, {naipe:"heart", type:"7"}, {naipe:"heart", type:"Q"}, {naipe:"heart", type:"J"}, {naipe:"heart", type:"K"}]
+        Cards: [ {naipe:"heart", type: "A"}, {naipe:"heart", type:"2"}, {naipe:"heart", type:"3"}, {naipe:"heart", type:"4"}, {naipe:"heart", type:"5"}, {naipe:"heart", type: "6"}, {naipe:"heart", type:"7"}, {naipe:"heart", type:"Q"}, {naipe:"heart", type:"J"}, {naipe:"heart", type:"K"},
+                {naipe:"spades", type: "A"}, {naipe:"spades", type:"2"}, {naipe:"spades", type:"3"}, {naipe:"spades", type:"4"}, {naipe:"spades", type:"5"}, {naipe:"spades", type: "6"}, {naipe:"spades", type:"7"}, {naipe:"spades", type:"Q"}, {naipe:"spades", type:"J"}, {naipe:"spades", type:"K"},
+                {naipe:"diamonds", type: "A"}, {naipe:"diamonds", type:"2"}, {naipe:"diamonds", type:"3"}, {naipe:"diamonds", type:"4"}, {naipe:"diamonds", type:"5"}, {naipe:"diamonds", type: "6"}, {naipe:"diamonds", type:"7"}, {naipe:"diamonds", type:"Q"}, {naipe:"diamonds", type:"J"}, {naipe:"diamonds", type:"K"},
+                {naipe:"clubs", type: "A"}, {naipe:"clubs", type:"2"}, {naipe:"clubs", type:"3"}, {naipe:"clubs", type:"4"}, {naipe:"clubs", type:"5"}, {naipe:"clubs", type: "6"}, {naipe:"clubs", type:"7"}, {naipe:"clubs", type:"Q"}, {naipe:"clubs", type:"J"}, {naipe:"clubs", type:"K"}]
     }
 }
 
 state.Players["player1"] = {
-    Cards: []
+    Cards: [],
+    score: 0
 }
 state.Players["player2"] = {
-    Cards: []
+    Cards: [],
+    score: 0
 }
 
 
@@ -54,26 +58,36 @@ async function oneTurn(request, response) {
     // state.Players["player2"].Cards = pickUpCard("player2")
     // console.log(state.Players["player2"].Cards)
 
-    state.Players["player1"].Cards.push(pickUpCard())
-    console.log(state.Players["player1"].Cards[0])
-    state.Players["player2"].Cards.push(pickUpCard())
-    console.log(state.Players["player2"].Cards[0])
+    one = pickUpCard()
+    two = pickUpCard()
+
+
+    state.Players["player1"].Cards.push(one[0])
+    console.log(state.Players["player1"].Cards)
+    state.Players["player2"].Cards.push(two[0])
+    console.log(state.Players["player2"].Cards)
     
 
-    one = numberCards(state.Players["player1"].Cards[0][0].type)
-    console.log(`carta do numero 1 ${one}`)
-    two = numberCards(state.Players["player2"].Cards[0][0].type)
-    console.log(`carta do numero 2 ${two}`)
+    one_number = numberCards(one[0].type)
+    console.log(`carta do numero 1: ${one_number}`)
+    two_number = numberCards(two[0].type)
+    console.log(`carta do numero 2: ${two_number}`)
 
-    if (two > one) {
+    if (two_number > one_number) {
         winner = 'Player 2'
+        state.Players['player2'].score += 1
+
     }
-    if (one > two) {
+    if (one_number > two_number) {
         winner = 'Player 1'
+        state.Players['player1'].score += 1
     }
-    if (one == two) {
+    if (one_number == two_number) {
         winner = 'Empate'
     }
+
+    console.log(`Player 1 tem ${state.Players['player1'].score} pontos.`)
+    console.log(`Player 2 tem ${state.Players['player2'].score} pontos.`)
 
     return response.json(winner)
 }
